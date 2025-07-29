@@ -8,10 +8,13 @@ from rest_framework import status
 
 @api_view(['GET'])
 def get_books(request):
-  books = Book.objects.all()
-  serializer = BookSerializer(books, many=True)
-  return Response(serializer.data)
-
+    # Use prefetch_related to optimize the query and avoid N+1 problem
+    books = Book.objects.prefetch_related('reviews').all()
+    
+    # Pass the books to the serializer (which already includes reviews)
+    serializer = BookSerializer(books, many=True)
+    
+    return Response(serializer.data)
 
 @api_view(['POST'])
 def post_book(request):
