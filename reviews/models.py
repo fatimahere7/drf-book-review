@@ -9,6 +9,10 @@ class Review(models.Model):
     rating = models.IntegerField()
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    review_number = models.PositiveIntegerField(default=1)
+    class Meta:
+        ordering = ['created_at']
+        unique_together = ['user', 'book', 'review_number']
+    
     def __str__(self):
-        return f"{self.user.username}'s review on {self.book.title}"
+        return f"Review {self.review_number} by {self.user.username} for {self.book.title}"
